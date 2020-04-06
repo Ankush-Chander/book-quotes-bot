@@ -92,10 +92,8 @@ async def daily_tweet():
 		quotes = eval(fp.read())
 		assert isinstance(quotes, list)
 	# print(quotes)
-	for quote in quotes:
-		if len(quote) < 240:
-			await update_status(quote)
-			break
+	quotes = [quote for quote in quotes if len(quote) < 240]
+	await update_status(quotes[0])
 	# 	tweet quote
 	shifted_quotes = quotes[1:] + quotes[:1]
 	assert len(shifted_quotes) == len(quotes)
@@ -116,6 +114,7 @@ if __name__ == '__main__':
 		if option == "--tweet":
 			loop = asyncio.get_event_loop()
 			loop.run_until_complete(daily_tweet())
+			sys.exit(0)
 		elif option == "--url":
 			print(f"url:{a}")
 			book_quote_url = a
